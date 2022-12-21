@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace ExceptionHunter
 {
@@ -45,23 +46,34 @@ namespace ExceptionHunter
                     {
                         if (method != null && !method.IsGenericMethod)
                         {
-                            if (method.GetMethodBase() != null && method.HasAnyExceptions())
+                            try
                             {
-                                string methodName = method.GetFriendlyName();
-                                if (methodName == null)
+                                if (method.GetMethodBase() != null && method.HasAnyExceptions())
                                 {
-                                    continue;
-                                }
-
-                                Console.WriteLine($"\n{currentNameSpace}.{classType.Name}.{method.GetFriendlyName()}");
-
-                                foreach (Type? exception in method.GetAllExceptions())
-                                {
-                                    if (exception != null)
+                                    string methodName = method.GetFriendlyName();
+                                    if (methodName == null)
                                     {
-                                        Console.WriteLine($"    {exception.FullName}");
+                                        continue;
                                     }
+
+                                    ReadOnlyCollection<Type>? exceptions = method.GetAllExceptions();
+
+                                    Console.WriteLine($"\n{currentNameSpace}.{classType.Name}.{method.GetFriendlyName()}");
+
+                                    foreach (Type? exception in method.GetAllExceptions())
+                                    {
+                                        if (exception != null)
+                                        {
+                                            Console.WriteLine($"    {exception.FullName}");
+                                        }
+                                    }
+
                                 }
+                            }
+                            catch (Exception ex)
+                            {
+
+                                Console.WriteLine($"\n{ex.Message}");
                             }
                         }
                     }

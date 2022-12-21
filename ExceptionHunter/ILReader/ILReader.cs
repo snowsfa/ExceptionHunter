@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -21,10 +19,10 @@ namespace ExceptionHunter.ILReader
             s_OneByteOpCodes = new OpCode[0x100];
             s_TwoByteOpCodes = new OpCode[0x100];
 
-            foreach (FieldInfo fi in typeof (OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static))
+            foreach (FieldInfo fi in typeof(OpCodes).GetFields(BindingFlags.Public | BindingFlags.Static))
             {
-                var opCode = (OpCode) fi.GetValue(null);
-                var value = (UInt16) opCode.Value;
+                var opCode = (OpCode)fi.GetValue(null);
+                var value = (UInt16)opCode.Value;
                 if (value < 0x100)
                 {
                     s_OneByteOpCodes[value] = opCode;
@@ -117,82 +115,82 @@ namespace ExceptionHunter.ILReader
                 case OperandType.InlineNone:
                     return new InlineNoneInstruction(offset, opCode);
 
-                    //The operand is an 8-bit integer branch target.
+                //The operand is an 8-bit integer branch target.
                 case OperandType.ShortInlineBrTarget:
                     SByte shortDelta = ReadSByte();
                     return new ShortInlineBrTargetInstruction(offset, opCode, shortDelta);
 
-                    //The operand is a 32-bit integer branch target.
+                //The operand is a 32-bit integer branch target.
                 case OperandType.InlineBrTarget:
                     Int32 delta = ReadInt32();
                     return new InlineBrTargetInstruction(offset, opCode, delta);
 
-                    //The operand is an 8-bit integer: 001F  ldc.i4.s, FE12  unaligned.
+                //The operand is an 8-bit integer: 001F  ldc.i4.s, FE12  unaligned.
                 case OperandType.ShortInlineI:
                     Byte int8 = ReadByte();
                     return new ShortInlineIInstruction(offset, opCode, int8);
 
-                    //The operand is a 32-bit integer.
+                //The operand is a 32-bit integer.
                 case OperandType.InlineI:
                     Int32 int32 = ReadInt32();
                     return new InlineIInstruction(offset, opCode, int32);
 
-                    //The operand is a 64-bit integer.
+                //The operand is a 64-bit integer.
                 case OperandType.InlineI8:
                     Int64 int64 = ReadInt64();
                     return new InlineI8Instruction(offset, opCode, int64);
 
-                    //The operand is a 32-bit IEEE floating point number.
+                //The operand is a 32-bit IEEE floating point number.
                 case OperandType.ShortInlineR:
                     Single float32 = ReadSingle();
                     return new ShortInlineRInstruction(offset, opCode, float32);
 
-                    //The operand is a 64-bit IEEE floating point number.
+                //The operand is a 64-bit IEEE floating point number.
                 case OperandType.InlineR:
                     Double float64 = ReadDouble();
                     return new InlineRInstruction(offset, opCode, float64);
 
-                    //The operand is an 8-bit integer containing the ordinal of a local variable or an argument
+                //The operand is an 8-bit integer containing the ordinal of a local variable or an argument
                 case OperandType.ShortInlineVar:
                     Byte index8 = ReadByte();
                     return new ShortInlineVarInstruction(offset, opCode, index8);
 
-                    //The operand is 16-bit integer containing the ordinal of a local variable or an argument.
+                //The operand is 16-bit integer containing the ordinal of a local variable or an argument.
                 case OperandType.InlineVar:
                     UInt16 index16 = ReadUInt16();
                     return new InlineVarInstruction(offset, opCode, index16);
 
-                    //The operand is a 32-bit metadata string token.
+                //The operand is a 32-bit metadata string token.
                 case OperandType.InlineString:
                     token = ReadInt32();
                     return new InlineStringInstruction(offset, opCode, token, m_resolver);
 
-                    //The operand is a 32-bit metadata signature token.
+                //The operand is a 32-bit metadata signature token.
                 case OperandType.InlineSig:
                     token = ReadInt32();
                     return new InlineSigInstruction(offset, opCode, token, m_resolver);
 
-                    //The operand is a 32-bit metadata token.
+                //The operand is a 32-bit metadata token.
                 case OperandType.InlineMethod:
                     token = ReadInt32();
                     return new InlineMethodInstruction(offset, opCode, token, m_resolver);
 
-                    //The operand is a 32-bit metadata token.
+                //The operand is a 32-bit metadata token.
                 case OperandType.InlineField:
                     token = ReadInt32();
                     return new InlineFieldInstruction(m_resolver, offset, opCode, token);
 
-                    //The operand is a 32-bit metadata token.
+                //The operand is a 32-bit metadata token.
                 case OperandType.InlineType:
                     token = ReadInt32();
                     return new InlineTypeInstruction(offset, opCode, token, m_resolver);
 
-                    //The operand is a FieldRef, MethodRef, or TypeRef token.
+                //The operand is a FieldRef, MethodRef, or TypeRef token.
                 case OperandType.InlineTok:
                     token = ReadInt32();
                     return new InlineTokInstruction(offset, opCode, token, m_resolver);
 
-                    //The operand is the 32-bit integer argument to a switch instruction.
+                //The operand is the 32-bit integer argument to a switch instruction.
                 case OperandType.InlineSwitch:
                     Int32 cases = ReadInt32();
                     var deltas = new Int32[cases];
@@ -229,7 +227,7 @@ namespace ExceptionHunter.ILReader
 
         private SByte ReadSByte()
         {
-            return (SByte) ReadByte();
+            return (SByte)ReadByte();
         }
 
         private UInt16 ReadUInt16()

@@ -2,7 +2,7 @@
   "profiles": {
     "ExceptionHunter": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\git\\platform-brisa-api\\Atlas.WebAPI\\Atlas.GIM\\Atlas.GIM.WebAPI\\bin\\Debug\\net6.0\\Atlas.GIM.Business.dll"
+      "commandLineArgs": "C:\\tmp\\bin\\Atlas.GIM.Infrastructure.dll"
     }
   }
 }
